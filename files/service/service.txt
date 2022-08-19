@@ -1,0 +1,77 @@
+import { Repository, getRepository } from 'typeorm';
+import AppError from '../../../shared/errors/AppError';
+import { moduleName } from '../entities/moduleName.entity';
+
+interface CreatemoduleName {
+fields
+}
+
+interface UpdatemoduleName extends Partial<CreatemoduleName> {
+  id: string;
+}
+
+class moduleNameService {
+  moduleNameRepo: Repository<moduleName>;
+
+  constructor() {
+    this.moduleNameRepo = getRepository(moduleName);
+  }
+
+  public async create(body: CreatemoduleName) {
+    const moduleNameExists = await this.moduleNameRepo.findOne({
+      where: {
+        code: body.code,
+      },
+    });
+
+    if (moduleNameExists) {
+      throw new AppError('moduleName já existe');
+    }
+
+    const newmoduleName = this.moduleNameRepo.create(body);
+
+    await this.moduleNameRepo.save(newmoduleName);
+
+    return newmoduleName;
+  }
+
+  public async read() {
+    const [data, total_results] = await this.moduleNameRepo.findAndCount({
+      order: { created_at: 'DESC' },
+    });
+
+    return { results: data, total_results };
+  }
+
+  public async update({ id, ...body }: UpdatemoduleName) {
+    const moduleName = await this.moduleNameRepo.findOne({
+      where: { id },
+    });
+
+    if (!moduleName) {
+      throw new AppError('moduleName não encontrado');
+    }
+
+    const merge = this.moduleNameRepo.merge(moduleName, body);
+
+    await this.moduleNameRepo.save(merge);
+
+    return merge;
+  }
+
+  public async delete(id: string) {
+    const moduleName = await this.moduleNameRepo.findOne({
+      where: { id },
+    });
+
+    if (!moduleName) {
+      throw new AppError('moduleName não encontrado');
+    }
+
+    await this.moduleNameRepo.softDelete(id);
+
+    return { ok: 'ok' };
+  }
+}
+
+export default moduleNameService;

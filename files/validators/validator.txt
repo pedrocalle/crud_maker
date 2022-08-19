@@ -1,0 +1,12 @@
+import * as yup from 'yup';
+
+export const CreateModuleName = yup.object({
+create
+});
+
+export const UpdateModuleName = yup.object({
+    id: yup.string().uuid().required('Id obrigatório'),
+update
+});
+
+content
