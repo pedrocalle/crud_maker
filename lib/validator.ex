@@ -5,11 +5,13 @@ defmodule CrudMaker.Validator do
     fieldsUpdate = Enum.join(columnsUpdate, "\n")
 
     file = String.replace(content, "ModuleName", moduleName)
-    IO.inspect(file)
     fileCreate = String.replace(file, "create", fields)
     fileUpdate = String.replace(fileCreate, "update", fieldsUpdate)
 
-    File.write("./files/results/#{moduleName}.ts", fileUpdate)
+    File.write(
+      "../../Graciosa/backend-express/src/modules/golf/validators/#{moduleName}.ts",
+      fileUpdate
+    )
   end
 
   def writeColumnCreate(moduleName, list) do

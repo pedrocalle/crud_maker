@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import AppError from '../../../shared/errors/AppError';
 import moduleNameService from '../services/moduleNameService';
-import { CreatemoduleName, UpdatemoduleName } from '../validators';
+import { CreatemoduleName, UpdatemoduleName } from '../validators/moduleName';
 
 const moduleNameRouter = Router();
 

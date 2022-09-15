@@ -6,7 +6,10 @@ defmodule CrudMaker.Service do
     file = String.replace(content, "moduleName", moduleName)
     finalFile = String.replace(file, "fields", fields)
 
-    File.write("./files/results/#{moduleName}Service.ts", finalFile)
+    File.write(
+      "../../Graciosa/backend-express/src/modules/golf/services/#{moduleName}Service.ts",
+      finalFile
+    )
   end
 
   def writeColumn(moduleName, list) do

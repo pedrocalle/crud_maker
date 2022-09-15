@@ -6,7 +6,10 @@ defmodule CrudMaker.Entity do
     file = String.replace(content, "moduleName", moduleName)
     finalFile = String.replace(file, "entityColumns", fields)
 
-    File.write("./files/results/#{moduleName}.entity.ts", finalFile)
+    File.write(
+      "../../Graciosa/backend-express/src/modules/golf/entities/#{moduleName}.entity.ts",
+      finalFile
+    )
   end
 
   def writeColumn(moduleName, list) do

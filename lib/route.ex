@@ -3,6 +3,9 @@ defmodule CrudMaker.Router do
     {:ok, content} = File.read("./files/routes/routes.txt")
     file = String.replace(content, "moduleName", moduleName)
 
-    File.write("./files/results/#{moduleName}.routes.ts", file)
+    File.write(
+      "../../Graciosa/backend-express/src/modules/golf/routes/#{moduleName}.routes.ts",
+      file
+    )
   end
 end
