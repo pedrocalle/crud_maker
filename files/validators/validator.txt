@@ -1,12 +1,11 @@
-import * as yup from 'yup';
+import { yup } from '@/lib';
+import { NotRequiredValidator } from '@/shared/validators';
 
-export const CreateModuleName = yup.object({
+export const CreateuModuleName = yup.object({
 create
 });
 
-export const UpdateModuleName = yup.object({
-    id: yup.string().uuid().required('Id obrigatório'),
-update
+export const UpdateuModuleName = yup.object({
+  ...NotRequiredValidator(CreateuModuleName),
+  id: yup.string().uuid().required(),
 });
-
-content

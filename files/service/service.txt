@@ -1,23 +1,23 @@
 import { Repository, getRepository } from 'typeorm';
-import AppError from '../../../shared/errors/AppError';
-import { moduleName } from '../entities/moduleName.entity';
+import AppError from '@/shared/errors/AppError';
+import { InferType } from 'yup';
+import { BasicQueryFilters } from '@/shared/models';
+import { toConditionQueryBuilder } from '@/utils';
+import { uModuleName } from '../entities/module_name.entity';
+import { CreateuModuleName, UpdateuModuleName } from '../validators/uModuleNameValidator';
 
-interface CreatemoduleName {
-fields
-}
+type TCreateuModuleName = InferType<typeof CreateuModuleName>;
+type TUpdateuModuleName = InferType<typeof UpdateuModuleName> &
+  Partial<TCreateuModuleName>;
 
-interface UpdatemoduleName extends Partial<CreatemoduleName> {
-  id: string;
-}
-
-class moduleNameService {
-  moduleNameRepo: Repository<moduleName>;
+class uModuleNameService {
+  moduleNameRepo: Repository<uModuleName>;
 
   constructor() {
-    this.moduleNameRepo = getRepository(moduleName);
+    this.moduleNameRepo = getRepository(uModuleName);
   }
 
-  public async create(body: CreatemoduleName) {
+  public async create(body: TCreateuModuleName) {
     const moduleNameExists = await this.moduleNameRepo.findOne({
       where: {
         code: body.code,
@@ -25,31 +25,41 @@ class moduleNameService {
     });
 
     if (moduleNameExists) {
-      throw new AppError('moduleName já existe');
+      throw new AppError('uModuleName já existe');
     }
 
-    const newmoduleName = this.moduleNameRepo.create(body);
+    const newuModuleName = this.moduleNameRepo.create(body);
 
-    await this.moduleNameRepo.save(newmoduleName);
+    await this.moduleNameRepo.save(newuModuleName);
 
-    return newmoduleName;
+    return newuModuleName;
   }
 
-  public async read() {
-    const [data, total_results] = await this.moduleNameRepo.findAndCount({
-      order: { created_at: 'DESC' },
+  public async read({fields, sort, rows, page}: Partial<BasicQueryFilters>) {
+    
+    const { whereQuery, whereValues, orderBy } = toConditionQueryBuilder({
+      fields,
+      sort,
     });
 
-    return { results: data, total_results };
+    const [results, total_results] = await this.moduleNameRepo
+      .createQueryBuilder('entity')
+      .where(whereQuery, whereValues)
+      .skip(rows * (page - 1))
+      .take(rows)
+      .orderBy(orderBy)
+      .getManyAndCount();
+    
+    return { results, total_results };
   }
 
-  public async update({ id, ...body }: UpdatemoduleName) {
+  public async update({ id, ...body }: TUpdateuModuleName) {
     const moduleName = await this.moduleNameRepo.findOne({
       where: { id },
     });
 
     if (!moduleName) {
-      throw new AppError('moduleName não encontrado');
+      throw new AppError('uModuleName não encontrado');
     }
 
     const merge = this.moduleNameRepo.merge(moduleName, body);
@@ -65,7 +75,7 @@ class moduleNameService {
     });
 
     if (!moduleName) {
-      throw new AppError('moduleName não encontrado');
+      throw new AppError('uModuleName não encontrado');
     }
 
     await this.moduleNameRepo.softDelete(id);
@@ -74,4 +84,4 @@ class moduleNameService {
   }
 }
 
-export default moduleNameService;
+export default uModuleNameService;

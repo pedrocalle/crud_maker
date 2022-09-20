@@ -3,13 +3,18 @@ defmodule CrudMaker.Entity do
     {:ok, content} = File.read("./files/entity/entity.txt")
     fields = Enum.join(columns, "\n")
 
-    file = String.replace(content, "moduleName", moduleName)
+    uModuleName = CrudMaker.Utils.upcaseFirst(moduleName)
+    module_name = CrudMaker.Utils.snakeCase(moduleName)
+    moduleName = CrudMaker.Utils.downcaseFirst(moduleName)
+
+    file = String.replace(content, "uModuleName", uModuleName)
+    file = String.replace(file, "module_name", module_name)
+
     finalFile = String.replace(file, "entityColumns", fields)
 
-    File.write(
-      "../../Graciosa/backend-express/src/modules/golf/entities/#{moduleName}.entity.ts",
-      finalFile
-    )
+    exportFolder = "./export/#{moduleName}/entities"
+    File.mkdir_p!(exportFolder)
+    File.write("#{exportFolder}/#{module_name}.entity.ts", finalFile)
   end
 
   def writeColumn(moduleName, list) do

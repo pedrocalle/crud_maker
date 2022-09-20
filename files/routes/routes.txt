@@ -1,38 +1,38 @@
 import { Router } from 'express';
-import AppError from '../../../shared/errors/AppError';
-import moduleNameService from '../services/moduleNameService';
-import { CreatemoduleName, UpdatemoduleName } from '../validators/moduleName';
+import AppError from '@/shared/errors/AppError';
+import uModuleNameService from '../services/uModuleNameService';
+import { CreateuModuleName, UpdateuModuleName } from '../validators/uModuleNameValidator';
 
 const moduleNameRouter = Router();
 
 moduleNameRouter.post('/', async (req, res) => {
-  const bodyValidate = await CreatemoduleName.validate(req.body).catch(err => {
+  const bodyValidate = await CreateuModuleName.validate(req.body).catch(err => {
     throw new AppError(err);
   });
 
-  const moduleNameService = new moduleNameService();
+  const moduleNameService = new uModuleNameService();
   const moduleName = await moduleNameService.create(bodyValidate);
 
   return res.json(moduleName);
 });
 
 moduleNameRouter.get('/', async (req, res) => {
-  const moduleNameService = new moduleNameService();
-  const moduleName = await moduleNameService.read();
+  const moduleNameService = new uModuleNameService();
+  const moduleName = await moduleNameService.read(req.query as any);
 
   return res.json(moduleName);
 });
 
 moduleNameRouter.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const bodyValidate = await UpdatemoduleName.validate({
+  const bodyValidate = await UpdateuModuleName.validate({
     id,
     ...req.body,
   }).catch(err => {
     throw new AppError(err);
   });
 
-  const moduleNameService = new moduleNameService();
+  const moduleNameService = new uModuleNameService();
   const moduleName = await moduleNameService.update(bodyValidate);
 
   return res.json(moduleName);
@@ -41,7 +41,7 @@ moduleNameRouter.put('/:id', async (req, res) => {
 moduleNameRouter.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const moduleNameService = new moduleNameService();
+  const moduleNameService = new uModuleNameService();
   const moduleName = await moduleNameService.delete(id);
 
   return res.json(moduleName);

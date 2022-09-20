@@ -1,17 +1,18 @@
 defmodule CrudMaker.Validator do
-  def writeFile(columnsUpdate, columnsCreate, moduleName) do
+  def writeFile(columnsCreate, moduleName) do
     {:ok, content} = File.read("./files/validators/validator.txt")
     fields = Enum.join(columnsCreate, "\n")
-    fieldsUpdate = Enum.join(columnsUpdate, "\n")
 
-    file = String.replace(content, "ModuleName", moduleName)
-    fileCreate = String.replace(file, "create", fields)
-    fileUpdate = String.replace(fileCreate, "update", fieldsUpdate)
+    uModuleName = CrudMaker.Utils.upcaseFirst(moduleName)
+    moduleName = CrudMaker.Utils.downcaseFirst(moduleName)
 
-    File.write(
-      "../../Graciosa/backend-express/src/modules/golf/validators/#{moduleName}.ts",
-      fileUpdate
-    )
+    file = String.replace(content, "uModuleName", uModuleName)
+
+    finalFile = String.replace(file, "create", fields)
+    exportFolder = "./export/#{moduleName}/validators"
+
+    File.mkdir_p!(exportFolder)
+    File.write("#{exportFolder}/#{uModuleName}Validator.ts", finalFile)
   end
 
   def writeColumnCreate(moduleName, list) do
@@ -21,16 +22,6 @@ defmodule CrudMaker.Validator do
     |> Enum.map(fn elem ->
       columns ++ "\t#{elem[:name]}: yup.#{elem[:type]}().required(),"
     end)
-    |> writeColumnUpdate(moduleName, list)
-  end
-
-  def writeColumnUpdate(columnsCreate, moduleName, list) do
-    columns = []
-
-    list
-    |> Enum.map(fn elem ->
-      columns ++ "\t#{elem[:name]}: yup.#{elem[:type]}(),"
-    end)
-    |> writeFile(columnsCreate, moduleName)
+    |> writeFile(moduleName)
   end
 end
