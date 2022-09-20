@@ -1,10 +1,11 @@
 {
   "name": "crud_maker",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "mix.es",
   "repository": "https://github.com/pedrocalle/crud_maker.git",
-  "author": "EduardoZF <eduardozf1@gmail.com>",
-  "license": "MIT",
+  "author": "Pedro Calle",
+  "private": true,
+  "license": "none",
   "scripts": {
     "dev": "iex -S mix run -e \"CrudMaker.build()\""
   }
