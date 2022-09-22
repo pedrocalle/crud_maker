@@ -1,6 +1,10 @@
 # CrudMaker
 
-**TODO: Add description**
+Automação que realiza o trabalho de criar tabelas e CRUDs para projetos backend, ganhando agilidade para o desenvolvimento.
+
+# Motivos
+
+* Foi criado para agilizar o trabalho repetitivo de realizar as tabelas e CRUDs.
 
 ## Installation
 
