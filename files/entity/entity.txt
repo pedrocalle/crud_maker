@@ -1,27 +1,10 @@
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { BaseWithUsersEntity } from '@/shared/entities/base_with_user.entity';
+import { Column, Entity } from 'typeorm';
+
 
 @Entity('moduleName')
-export class moduleName {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+export class moduleName extends BaseWithUsersEntity {
 
 entityColumns
 
-  // Variáveis de controle
-
-  @CreateDateColumn({ type: 'timestamp with time zone' })
-  created_at: Date;
-
-  @UpdateDateColumn({ type: 'timestamp with time zone' })
-  updated_at?: Date;
-
-  @DeleteDateColumn({ type: 'timestamp with time zone' })
-  deleted_at?: Date;
 }

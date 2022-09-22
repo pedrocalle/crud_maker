@@ -1,12 +1,15 @@
 import { Router } from 'express';
 import AppError from '../../../shared/errors/AppError';
 import moduleNameService from '../services/moduleNameService';
-import { CreatemoduleName, UpdatemoduleName } from '../validators/moduleName';
+import { CreatemoduleNameValidator, UpdatemoduleNameValidator } from '../validators/moduleName';
 
 const moduleNameRouter = Router();
 
 moduleNameRouter.post('/', async (req, res) => {
-  const bodyValidate = await CreatemoduleName.validate(req.body).catch(err => {
+  const bodyValidate = await CreatemoduleNameValidator.validate({
+    ...req.body,
+    created_user_code: req.user.code,
+  }).catch(err => {
     throw new AppError(err);
   });
 
@@ -25,15 +28,15 @@ moduleNameRouter.get('/', async (req, res) => {
 
 moduleNameRouter.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const bodyValidate = await UpdatemoduleName.validate({
-    id,
+  const bodyValidate = await UpdatemoduleNameValidator.validate({
     ...req.body,
+    updated_user_code: req.user.code,
   }).catch(err => {
     throw new AppError(err);
   });
 
   const moduleNameService = new moduleNameService();
-  const moduleName = await moduleNameService.update(bodyValidate);
+  const moduleName = await moduleNameService.update(id, bodyValidate);
 
   return res.json(moduleName);
 });

@@ -22,7 +22,7 @@ defmodule CrudMaker.Types do
     moduleName = String.trim(IO.gets("Nome do módulo:\n"))
     Entity.writeColumn(moduleName, list)
     Validator.writeColumnCreate(moduleName, list)
-    Service.writeColumn(moduleName, list)
+    Service.writeFile(moduleName)
     Router.writeFile(moduleName)
   end
 end

@@ -1,14 +1,15 @@
 import { Repository, getRepository } from 'typeorm';
 import AppError from '../../../shared/errors/AppError';
 import { moduleName } from '../entities/moduleName.entity';
+import { InferType } from 'yup';
 
-interface CreatemoduleName {
-fields
-}
+import {
+  CreatemoduleNameValidator,
+  UpdatemoduleNameValidator,
+} from '../validators';
 
-interface UpdatemoduleName extends Partial<CreatemoduleName> {
-  id: string;
-}
+type CreatemoduleName = InferType<typeof CreatemoduleNameValidator>;
+type UpdatemoduleName = InferType<typeof UpdatemoduleNameValidator>;
 
 class moduleNameService {
   moduleNameRepo: Repository<moduleName>;
@@ -43,7 +44,7 @@ class moduleNameService {
     return { results: data, total_results };
   }
 
-  public async update({ id, ...body }: UpdatemoduleName) {
+  public async update(id: string, body: UpdatemoduleName) {
     const moduleName = await this.moduleNameRepo.findOne({
       where: { id },
     });

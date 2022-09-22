@@ -1,12 +1,11 @@
 import * as yup from 'yup';
 
-export const CreateModuleName = yup.object({
-create
+export const CreatemoduleNameValidator = yup.object({
+CREATE
+   created_user_code: yup.number().required(),
 });
 
-export const UpdateModuleName = yup.object({
-    id: yup.string().uuid().required('Id obrigatório'),
-update
+export const UpdatemoduleNameValidator = yup.object({
+UPDATE
+  updated_user_code: yup.number().required(),
 });
-
-content
